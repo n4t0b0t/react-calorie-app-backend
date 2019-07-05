@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
 
 const mongoURI =
-  global.__MONGO_URI__ || "mongodb://localhost:27017/calorietracker";
+  process.env.NODE_ENV === "production"
+    ? process.env.MONGODB_URI
+    : global.__MONGO_URI__ || "mongodb://localhost:27017/calorietracker";
 
 mongoose.connect(mongoURI, { useNewUrlParser: true });
 mongoose.set("useFindAndModify", false);

@@ -8,11 +8,16 @@ const app = express();
 
 const userRouter = require("./routes/users");
 
+const originLink =
+  process.env.NODE_ENV === "production"
+    ? process.env.NETLIFY_URI
+    : "http://localhost:3000";
+
 app.use(express.json());
 
 app.use(
   cors({
-    origin: "http://localhost:3000"
+    origin: originLink
   })
 );
 

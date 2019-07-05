@@ -1,7 +1,8 @@
 const { secureUser } = require("./account.controller");
 const jwt = require("jsonwebtoken");
 
-const jwtSecret = "secretKey"; // SHOULD NOT BE HERE - SAVE ELSEWHERE
+const jwtSecret =
+  process.env.NODE_ENV === "production" ? process.env.JWT_KEY : "secretKey";
 
 const signToken = (id, username) => {
   const token = jwt.sign(

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "start": "node server.js",
+    "start": "NODE_ENV=production node server.js",
     "start:nodemon": "nodemon server.js"
   },
   "keywords": [],
