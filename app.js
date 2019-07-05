@@ -1,5 +1,5 @@
 const express = require("express");
-// const cors = require("cors");
+const cors = require("cors");
 // const db = require("./db");
 const { loginUser, signUpUser } = require("./controllers/account.controller");
 const { signToken, checkUserToken } = require("./controllers/jwt.controller");
@@ -9,6 +9,12 @@ const app = express();
 const userRouter = require("./routes/users");
 
 app.use(express.json());
+
+app.use(
+  cors({
+    origin: "http://localhost:3000"
+  })
+);
 
 app.use("/users", userRouter);
 
