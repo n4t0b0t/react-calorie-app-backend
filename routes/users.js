@@ -12,6 +12,7 @@ const { checkUserToken } = require("../controllers/jwt.controller");
 // CHECK THAT USER IS AUTHORISED FROM JWT LOGIN
 router.use("/", async (req, res, next) => {
   const auth = req.headers.authorization;
+  console.log("auth", auth);
   if (auth) {
     try {
       const authCheck = await checkUserToken(auth);
@@ -62,7 +63,10 @@ router.param("date", (req, res, next, date) => {
 
 // FINDS SPECIFIC ITEM BY ID IN DATE FOOD LOG
 // WILL BE UPDATED TO INCLUDE VALIDATION
+// NNEED TO HANDLE PROMISE REJECTIONS THAT OCCUR @ LINE 71
 router.param("id", async (req, res, next, id) => {
+  console.log("foodLog", req.user.foodLog);
+  console.log("date", req.date);
   const foundItem = req.user.foodLog
     .find(log => log.date === req.date)
     .meals.findIndex(el => (el._id ? el._id.toString() === id : false));
@@ -148,7 +152,10 @@ router.post("/:username/foodlog/:date", async (req, res, next) => {
     req.user.foodLog.push(newDateLog);
     try {
       const output = await updateMealLog(req.user);
-      res.status(201).json(output);
+      const updatedDateFoodLog = output.foodLog.find(
+        log => log.date === req.date
+      ).meals;
+      res.status(201).json(updatedDateFoodLog);
     } catch (err) {
       next(err);
     }
@@ -156,7 +163,10 @@ router.post("/:username/foodlog/:date", async (req, res, next) => {
     req.user.foodLog.find(log => log.date === req.date).meals.push(req.body);
     try {
       const output = await updateMealLog(req.user);
-      res.status(201).json(output);
+      const updatedDateFoodLog = output.foodLog.find(
+        log => log.date === req.date
+      ).meals;
+      res.status(201).json(updatedDateFoodLog);
     } catch (err) {
       next(err);
     }
@@ -177,7 +187,9 @@ router.put("/:username/foodlog/:date/:id", async (req, res, next) => {
     .meals.splice(req.itemIndex, 1, updatedItem);
   try {
     const output = await updateMealLog(req.user);
-    res.status(200).json(output);
+    const updatedDateFoodLog = output.foodLog.find(log => log.date === req.date)
+      .meals;
+    res.status(200).json(updatedDateFoodLog);
   } catch (err) {
     next(err);
   }
@@ -189,7 +201,9 @@ router.delete("/:username/foodlog/:date/:id", async (req, res, next) => {
     .meals.splice(req.itemIndex, 1);
   try {
     const output = await updateMealLog(req.user);
-    res.status(200).json(output);
+    const updatedDateFoodLog = output.foodLog.find(log => log.date === req.date)
+      .meals;
+    res.status(200).json(updatedDateFoodLog);
   } catch (err) {
     next(err);
   }

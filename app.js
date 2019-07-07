@@ -45,6 +45,7 @@ app.post("/login", async (req, res, next) => {
 
 app.get("/secure", async (req, res, next) => {
   const auth = req.headers.authorization;
+  console.log(req.headers);
   if (auth) {
     try {
       const authCheck = await checkUserToken(auth);

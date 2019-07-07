@@ -8,7 +8,7 @@ const signToken = (id, username) => {
   const token = jwt.sign(
     { sub: id, iat: new Date().getTime(), username },
     jwtSecret,
-    { expiresIn: "1h" }
+    { expiresIn: 1000 * 60 * 60 }
   );
   return token;
 };
@@ -16,8 +16,11 @@ const signToken = (id, username) => {
 const checkUserToken = async auth => {
   const token = auth.split(" ")[1] || "asdf";
   console.log("headerToken", token);
-  const decoded = jwt.verify(token, jwtSecret);
+  const decoded = jwt.verify(token, jwtSecret, {
+    clockTimestamp: new Date().getTime()
+  });
   console.log("decoded", decoded);
+  console.log("currentTime", new Date().getTime());
   try {
     const foundUser = await secureUser(decoded.sub);
     if (foundUser) {
